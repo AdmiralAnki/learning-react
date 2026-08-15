@@ -1,213 +1,125 @@
-# React Learning Strategy
+# Learning Strategy
 
-## Core Principle
+## Core principle
 
-Don't optimize for **remembering** React.
-Optimize for **building** React applications.
-
-The goal is to know *what exists* and *where to find it*, not to memorize syntax.
+Do not optimize for remembering syntax.
+Optimize for building, then for knowing *what exists* and *where to look it up*.
 
 ---
 
-# Learning Cycle
+## Cycle
 
-For every topic:
-
-```text
-Watch
-   ↓
-Build
-   ↓
-Break
-   ↓
-Recall
+```
+Watch → Build → Break → Recall → Rebuild
 ```
 
-Never binge-watch tutorials.
+Never binge-watch. Start coding within 10 minutes of a lesson.
 
----
+After a lesson, close the video:
 
-# While Watching Courses
-
-### ✅ Watch an entire lesson first
-Don't pause every minute to take notes.
-
-### ✅ After the lesson
-Close the video and ask:
-
-> "Can I explain this to another Swift developer?"
+> Can I explain this to another Swift/Java developer?
 
 If not, rewatch only that lesson.
 
-### ✅ Build immediately
-Start coding within 10 minutes of finishing the lesson.
+---
+
+## Time
+
+- **70%** building
+- **20%** courses
+- **10%** docs / notes
+
+Notes are for you in two weeks, not a textbook.
 
 ---
 
-# Notes Strategy
+## While watching Frontend Masters
 
-## Don't write lecture notes.
+1. Watch the lesson through.
+2. Build the idea in the ticket app (or a 20-line scratch file).
+3. Break it: wrong URL, empty list, slow network, duplicate submit.
+4. Rebuild once from memory.
 
-Instead, create **one-page summaries**.
+Course versions change — confirm the current title on FEM before a phase.
 
-Example:
+---
+
+## Notes — one page, not lecture transcripts
+
+### Mental model
 
 ```md
-## useState
+## Event delegation
 
-Mental Model
-- Component-local state
+Mental model
+- One listener on a parent; events bubble
 
-Swift Equivalent
-- @State
+Vanilla
+- listEl.addEventListener("click", handler)
 
-Gotchas
-- Don't mutate directly
-- Updates are asynchronous
+HTMX
+- usually none; hx-delete on the row
 
-Useful APIs
-- useState()
+React (later)
+- onClick on the row or a child; React delegates internally
 ```
 
----
+### Three living files
 
-# Keep Three Markdown Files
+**[notes/gotchas.md](notes/gotchas.md)** — only what repeatedly trips you up.
 
-## 1. `gotchas.md`
+**[notes/cheatsheet.md](notes/cheatsheet.md)** — syntax, no prose.
 
-Only things that repeatedly trip you up.
-
-Example:
+**[notes/comparisons.md](notes/comparisons.md)** — same feature, three ways, only when the contrast teaches something.
 
 ```md
-## JavaScript
+## Modal
 
-- == vs ===
-- undefined vs null
-- this binding
-- Objects are references
+Vanilla JS
+- Create/show a dialog; trap focus yourself; wire close + submit
 
-## React
+HTMX
+- Swap a fragment into a dialog slot; server returns the form HTML
 
-- Hooks only at top level
-- Don't mutate state
-- useEffect dependency array
-- Keys matter
+React
+- Modal is UI state (`open`). Conditional render. Focus in an effect.
 ```
 
----
+**[notes/journal.md](notes/journal.md)** — a few lines per day.
 
-## 2. `swift-vs-react.md`
-
-Map concepts between Swift and React.
-
-| Swift | React |
-|--------|--------|
-| @State | useState |
-| ObservableObject | Context / State Libraries |
-| Struct value types | JS objects are references |
-| ARC | Garbage Collection |
+UIKit mappings belong in gotchas or comparisons (`addTarget` → `addEventListener`). No separate essay.
 
 ---
 
-## 3. `cheatsheet.md`
+## After every phase
 
-Quick syntax reference only.
+Build or refactor **without** a tutorial open.
 
-Example:
-
-```css
-display: flex;
-justify-content:
-align-items:
-flex-direction:
-gap:
-```
-
-No explanations.
+| After | Without a tutorial |
+|---|---|
+| HTML/CSS | Static ticket shell |
+| JavaScript | Ticket CRUD in the DOM |
+| TypeScript | Typed ticket + API module |
+| Architecture | Modules + URL state |
+| Spring API | UI talks to real JSON |
+| HTMX | List + form as fragments |
+| React | Same screens in React |
 
 ---
 
-# Active Recall
-
-After every major lesson:
-
-1. Close the course.
-2. Open VS Code.
-3. Rebuild from memory.
-4. Google only when blocked.
-
----
-
-# Weekly Time Allocation
-
-- **70%** Building
-- **20%** Watching courses
-- **10%** Reading documentation
-
----
-
-# After Every Phase
-
-Build one small project **without following a tutorial**.
-
-Examples:
-
-- HTML/CSS → Portfolio
-- JavaScript → Todo App
-- TypeScript → Typed Todo
-- React → Movie App
-
----
-
-# Learning Journal
-
-At the end of each day:
-
-```md
-## YYYY-MM-DD
-
-Completed
-- CSS Grid
-
-Understood
-- Grid template
-- Auto-fit
-
-Need Practice
-- Grid areas
-
-Tomorrow
-- Flexbox
-```
-
----
-
-# Weekly Review
-
-Ask yourself:
+## Weekly review
 
 - Can I explain it without notes?
-- Can I build something using only docs?
-- What did I Google repeatedly?
+- Can I build it from docs only?
+- What did I Google more than twice? → `gotchas.md`
 - What still feels like magic?
-
-Add repeated mistakes to `gotchas.md`.
 
 ---
 
-# Final Rule
+## Final rule
 
-Your roadmap should follow this rhythm:
-
-```text
-Learn
-    ↓
-Build
-    ↓
-Forget
-    ↓
-Rebuild
+```
+Learn → Build → Forget → Rebuild
 ```
 
-Rebuilding—not rereading—is where long-term learning happens.
+Rebuilding is the point.

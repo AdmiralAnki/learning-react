@@ -1,132 +1,114 @@
-# React Learning Roadmap v3 — Frontend Masters Edition
+# React Curriculum — Phases 8–10
 
-Same phase structure and timeline as v2 (6–8 weeks, compressed for 6 years Swift/iOS experience), now mapped to specific Frontend Masters courses. Course names/versions shift over time — always search FEM's site for the current version number before starting a phase, in case a newer version has replaced the one listed here.
+This is the **React-specific** plan, not the whole path. Overall order and checkboxes: [README.md](README.md). Phases 1–7: [pre-react-path.md](pre-react-path.md).
 
----
+You should already have a ticket app in vanilla JS, on a Spring Boot JSON API, and (in part) in HTMX. React is the third implementation.
 
-## Phase 0: Mental Model (½ day)
-No course — read `phase-0-mental-model.md` first.
-
----
-
-## Phase 1: HTML & CSS Foundations (Week 1)
-
-**Primary course:**
-- **"Getting Started with CSS, v2" — Jen Kramer** (semantic HTML, selectors, specificity, box model, project-based — builds an actual portfolio site)
-
-**Follow with:**
-- **CSS layout course covering Grid & Flexbox — Jen Kramer** (search FEM catalog for her current Grid/Flexbox-focused course; titles get versioned)
-
-Skip any HTML/CSS course sections aimed at absolute beginners to computers/the internet — jump straight to the CSS mechanics.
-
-### Project
-Same as before: static responsive portfolio page, no JS. (You'll likely build exactly this as part of the Jen Kramer course anyway.)
+Course names/versions shift. Search FEM before starting. Do not invent courses.
 
 ---
 
-## Phase 2: JavaScript — The Differences Only (Week 2)
+## Phase 8 — React + TypeScript
 
-**Primary course:**
-- **"Deep JavaScript Foundations, v3" — Kyle Simpson**
+**Primary**
 
-This is a better fit for you than a beginner JS course — it's specifically deep-dives on closures, `this`, prototypes, and async, which is exactly the "differences from Swift" list from your plan. Skip/skim any segments on basic syntax (variables, loops, functions) you already recognize from other languages; focus hard on:
-- Closures module
-- `this` binding module
-- Async/Promises module
-- Prototypes module (lighter attention — mostly historical context for modern React work)
+- **Complete Intro to React, v9** — Brian Holt  
+  Hooks-first, Vite, modern React 18/19. Catalog title is sometimes “The Complete Intro to React Course.”  
+  This version also introduces **TanStack Router** and **TanStack Query**. Treat those as first contact, not the whole of Phase 9.
 
-**If Deep JS Foundations feels too advanced to start cold:** fall back to the JS portion of **"Complete Intro to Web Development, v3" — Brian Holt** first for a gentler on-ramp, then do Deep JS Foundations for the depth.
+- **Intermediate React, v6: RSCs, Hooks, & Performance** — Brian Holt  
+  Next step after Complete Intro: React 19, render modes, `useTransition`, performance. Some RSC material overlaps Phase 10 — skim if you are not on Next.js yet.
 
-### Project
-Vanilla JS + DOM to-do app, `localStorage` persistence — same as v2. Neither course above requires this project format, so treat it as your own supplementary reps.
+**Optional if TS + React still feels awkward**
 
----
+- **React and TypeScript, v3** — Steve Kinney
 
-## Phase 3: TypeScript (Week 3)
+Do the course exercises in TypeScript even if a demo is JS.
 
-**Primary course:**
-- **"TypeScript 5+ Fundamentals, v4" — Mike North**
+### Topics
 
-Covers types, interfaces, generics, narrowing, utility types, with React/Node examples baked in — a good fit since you're heading straight into typed React next. Given your Swift background, the sections on generics and interfaces will move fast for you; slow down on:
-- The "optional properties / type erasure at runtime" material — this is the part that can mislead your Swift-optional instincts (see the gotcha in your Phase 0 doc)
+JSX/TSX, components, typed props, state, events, conditional render, lists/keys, forms, `useState`, `useEffect`, lifting state, Context, custom hooks, API calls.
 
-### Project
-Port your Phase 2 vanilla JS to-do app to TypeScript.
-
----
-
-## Phase 4: Tooling (2–3 days, overlap with Phase 3)
-
-No dedicated FEM course needed — Vite/Node setup is covered inline in most of the React courses below. Just get comfortable with:
-- `npm`/`pnpm`, `package.json`
-- Vite scaffolding a TS + React project
-- React DevTools browser extension
-
----
-
-## Phase 5: React Fundamentals with TypeScript (Week 4–5)
-
-**Primary course:**
-- **"Complete Intro to React, v9" — Brian Holt**
-
-This is currently rated as one of FEM's strongest React fundamentals courses — clean, modern patterns (hooks-first, no legacy class-component detours). Covers components, props, `useState`, events, conditional rendering/lists, `useEffect`, forms, context. Do the exercises in TypeScript even if the course default is JS — you already know TS from Phase 3, so translate as you go; this cements both at once.
-
-**Follow immediately with:**
-- **"Intermediate React, v6" — Brian Holt**
-
-Picks up right where Complete Intro leaves off: `useReducer`, performance patterns, more advanced hooks, component/testing patterns. This is explicitly positioned as the next step after Complete Intro to React, so the two are designed to be taken back to back.
+Tooling (old “Phase 4”) is folded in here: `npm`/`pnpm`, Vite + React + TS, React DevTools.
 
 ### Projects
-Same four as v2 — counter, to-do v3 (React+TS), API-driven app, multi-step form — built alongside or immediately after these two courses, in TypeScript.
+
+Course-sized: counter, todo, API-driven UI, multi-step form.
+
+**Main:** rebuild the ticket app (`projects/ticket-app/05-react/`). Same screens as vanilla/HTMX.
+
+After each major piece, add a short note in [notes/comparisons.md](notes/comparisons.md):
+
+| Feature | Vanilla | HTMX | React |
+|---|---|---|---|
+| Modal | | | |
+| List + filter | | | |
+| Form submit | | | |
+| Detail route | | | |
+
+That comparison is a goal of this phase, not extra credit.
 
 ---
 
-## Phase 6: Production Ecosystem (Week 6–7)
+## Phase 9 — Production React
 
-**Primary courses (pick based on what's most relevant to your capstone):**
-- **A state management course covering Redux + ecosystem tooling** (search FEM catalog — there's a current course specifically on managing state at scale, framed around team/app-growth challenges, which matches your "production app for work" goal well)
-- **A React performance course covering React 19 features** — hydration, suspense, resource loading, server actions (relevant once you're shipping real apps, less urgent for a first pass)
+Only what you will use on a real app. One choice per job.
 
-**Not always a full standalone FEM course — supplement with official docs/smaller resources:**
-- React Router — check FEM catalog for current routing-specific course; if none current, use the official React Router docs
-- TanStack Query — check FEM catalog; if no current course, use official TanStack Query docs (excellent on their own)
-- Testing (Vitest + React Testing Library) — FEM has testing-focused courses; search catalog for current version
-- Tailwind CSS — FEM has Tailwind-specific courses; search catalog
+**FEM when it exists**
 
-### Given your backend context
-No FEM course will map directly to Keycloak/JWT specifics — that integration work is genuinely your own project territory, using official docs for whichever auth flow you pick.
+| Need | Course / source |
+|---|---|
+| Client state at scale | **State Management at Scale in React & Next.js** — David Khourshid |
+| Testing (Vitest, Testing Library) | **Testing Fundamentals** — Steve Kinney |
+| Performance (if Intermediate v6 was not enough) | **React Performance, v2** — Steve Kinney |
+| Accessibility | **Website Accessibility, v3** — Jon Kuperman and/or **Web App Accessibility (feat. React)** — Marcy Sutton Todd |
+| TanStack Query, deeper | **TanStack Start & TanStack Query** — Adam Rackis (optional; v9 already introduces Query) |
 
-### Capstone Project
-Same as v2: React+TS frontend for your in-progress microservices project.
+**Official docs (no current dedicated FEM course used here)**
 
----
+- [React Router](https://reactrouter.com/) — v9 teaches TanStack Router. Learn one well; skim the other so work codebases make sense.
+- [React Hook Form](https://react-hook-form.com/) — no FEM course found.
 
-## Phase 7: Next Steps (ongoing)
+**Pick**
 
-- **Next.js course — search FEM's "React & Next.js" learning path** for the current recommended Next.js course; FEM organizes this as part of a structured path, worth following once core React is solid
-- Performance deep-dive (memoization, code splitting) — same performance course flagged in Phase 6, or a dedicated one if it exists by then
-- Accessibility — FEM has standalone a11y courses; add if your capstone needs it
+- Server/async state: TanStack Query (not also SWR + RTK Query)
+- Client state: **Zustand or Redux Toolkit**, not both
+- CSS: keep what you have (plain CSS / CSS Modules). Tailwind only if you want it
+- Deploy: Vercel or Netlify for the React SPA; Spring Boot still hosts the API
 
----
+JWT/Keycloak specifics are your work project + official docs, not a FEM course.
 
-## Practical Notes on Using FEM
-
-- **Subscription:** individual plans run ~$39/month or ~$390/year — worth it only if you're consistently using it; the annual plan pays off past ~10 months of use
-- **Always verify current version numbers** before starting a phase — courses get re-recorded (v3 → v4 → v9, etc.) and older versions can vanish from the catalog or use outdated patterns
-- **FEM's own "React & Next.js Learning Path" and "TypeScript" learning path** bundle these courses in FEM's own recommended order — worth cross-checking against this doc once you're actually browsing the site, since their internal sequencing may shift as courses update
-- Track which specific course + version you actually took in your progress tracker (see updated README below) — useful if you revisit material or a course gets superseded
+**Capstone:** production-shaped ticket frontend — routing, query cache, one client store if needed, tested happy paths, deployed. Or the frontend for your microservices work, using the same habits.
 
 ---
 
-## Revised Weekly Rhythm (unchanged from v2)
+## Phase 10 — Next.js (optional)
 
-| Week | Focus | Primary FEM Course(s) |
+A React SPA + Spring Boot API is a complete architecture. Next.js is a different deployment and rendering model, not a promotion.
+
+**FEM:** **Next.js Fundamentals, v4** — Scott Moss
+
+Cover: mental model, App Router, SSR vs SSG, server vs client components, routing. Stop when you can explain when Next.js is worth the complexity.
+
+FEM also lists **Intermediate Next.js** and **Build a Fullstack Next.js App, v4** — only if you are actually shipping Next.js.
+
+---
+
+## Using FEM
+
+- Individual ~$39/month or ~$390/year; annual wins after ~10 months of real use
+- Confirm version numbers. Old recordings disappear or teach stale patterns
+- FEM’s **React & Next.js** and **TypeScript** learning paths are a useful cross-check, not a replacement for this order
+- Log the exact course + version you took in the README checklist
+
+---
+
+## Suggested rhythm (React block only)
+
+| Stretch | Focus | Primary FEM |
 |---|---|---|
-| 0 (½ day) | Mental model | — (your own doc) |
-| 1 | HTML/CSS | Getting Started with CSS, v2 + Grid/Flexbox course |
-| 2 | JS differences | Deep JavaScript Foundations, v3 |
-| 3 | TypeScript | TypeScript 5+ Fundamentals, v4 |
-| 3 (overlap) | Tooling | — (folded into React courses) |
-| 4–5 | React + TS | Complete Intro to React, v9 → Intermediate React, v6 |
-| 6–7 | Production ecosystem | State management course, testing course, performance course |
-| 8+ | Next.js, capstone | Next.js course (per FEM's React & Next.js path) |
+| 2 weeks | React + TS + ticket rebuild | Complete Intro to React, v9 → Intermediate React, v6 |
+| 1–2 weeks | Production habits on that app | State management, Testing Fundamentals |
+| Optional | Next.js | Next.js Fundamentals, v4 |
+
+Pre-React phases are not compressed into this table on purpose.

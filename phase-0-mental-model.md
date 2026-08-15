@@ -1,91 +1,145 @@
-# Phase 0: Mental Model — Swift/iOS → Web/JS/React
+# Phase 0: Web Mental Model
 
-You're not starting from zero. You're porting 6 years of intuition to a new platform. This doc exists so you stop translating in your head after week one.
+You're not starting from zero. You're porting UIKit/iOS intuition onto the web. Read this once, then stop translating in your head.
+
+You know **imperative UI**: you own the views and you update them when data changes. Vanilla JS is that same job in the browser. React (declarative, closer to SwiftUI) is a later tool. This phase is the platform it sits on. You do not need SwiftUI.
 
 ---
 
-## The Big Picture Mapping
+## What happens when a browser loads a page
 
-| iOS/Swift World | Web World | Notes |
+```
+Type URL / click link
+        ↓
+DNS → TCP → TLS
+        ↓
+HTTP request  (GET /tickets)
+        ↓
+Server response  (HTML, or JSON, or an HTML fragment)
+        ↓
+Browser parses HTML → builds the DOM
+        ↓
+Loads CSS → CSSOM → layout → paint
+        ↓
+Loads JavaScript → can change the DOM after that
+```
+
+Everything later is a variation of this loop.
+
+| Piece | Job |
+|---|---|
+| **HTML** | Structure and meaning |
+| **CSS** | Layout and appearance |
+| **JavaScript** | Behavior after the page exists |
+| **DOM** | Live tree the browser renders; JS reads and writes it |
+| **HTTP** | How the browser talks to a server |
+| **JSON** | Common payload for APIs |
+| **REST API** | HTTP + resources (`GET /tickets`, `POST /tickets`) |
+
+Rendering, at this level: parse HTML → compute styles → layout boxes → paint pixels. You do not need the full browser-engine deep dive yet.
+
+---
+
+## Frontend vs backend
+
+```
+Browser                          Server
+───────                          ──────
+HTML / CSS / JS                  Spring Boot
+DOM, events, fetch               REST controllers
+What the user sees               Data, rules, persistence
+        \                        /
+         \______ HTTP _________/
+```
+
+You already write the right-hand side. This repo is mostly the left-hand side, plus the HTTP contract between them.
+
+---
+
+## Where the later tools sit
+
+**Spring Boot** — backend. Exposes JSON (and later, small HTML fragments). Not a UI framework. **No Thymeleaf.**
+
+**Vanilla JS** — you request JSON, then you update the DOM. You feel the state/DOM problem directly.
+
+**HTMX** — the server returns HTML fragments; HTMX swaps them into the page. Less client JS. State leans toward the server.
+
+**React** — you describe UI from state; React updates the DOM. Worth it once client state and UI sync become the bottleneck.
+
+**SPA / CSR** — one page load, then JS fetches data and redraws views (vanilla SPA or React SPA).
+
+**SSR** — server sends HTML first (Next.js later; HTMX is a lighter cousin of “server sends HTML”).
+
+Do not pick a winner here. You will build the same ticket app three ways and compare.
+
+---
+
+## UIKit → web
+
+| UIKit / iOS | Web | Notes |
 |---|---|---|
-| Xcode + Swift compiler | Browser + JS engine (V8 etc.) | JS is interpreted/JIT-compiled, not ahead-of-time compiled like Swift |
-| UIKit (imperative) | Raw DOM + vanilla JS (imperative) | You'll learn this briefly, then mostly leave it behind |
-| **SwiftUI (declarative)** | **React (declarative)** | This is your real anchor point — same paradigm shift Apple made you go through already |
-| `.swift` files | `.js` / `.jsx` / `.ts` / `.tsx` files | `.tsx` = TypeScript + JSX, what you'll write most |
-| Storyboards/xib or SwiftUI View hierarchy | JSX / component tree | Both describe "what the UI looks like," not "how to build it step by step" |
-| Swift Package Manager / CocoaPods | npm / yarn / pnpm | Same job: dependency management |
-| `.xcodeproj` / `.xcworkspace` | `package.json` + bundler config (Vite) | package.json is your project's "manifest" |
-| SQLite (local relational storage) | No direct equivalent for typical apps — data lives on a server, fetched via API | If you ever need local storage: `localStorage` (like `UserDefaults`, key-value only) or IndexedDB (closer to SQLite, relational-ish, async API) |
-| Simulator | Browser (Chrome/Safari) + DevTools | DevTools ≈ Xcode's debugger + view hierarchy inspector combined |
-| Instruments | Chrome DevTools Performance tab / React DevTools Profiler | |
+| Xcode + Swift compiler | Browser + JS engine (V8 etc.) | JS is interpreted/JIT, not AOT like Swift |
+| **`UIView` hierarchy** | **DOM tree** | Live objects you query and mutate |
+| `UIViewController` | A screen / page module | Owns a chunk of UI + its events |
+| Storyboard / xib / programmatic UI | HTML (+ later, JS that builds nodes) | Structure vs code that builds structure |
+| Auto Layout / stack views | CSS Flexbox + Grid | Same job, zero shared syntax |
+| `addTarget` / `IBAction` | `addEventListener` | You wire the control yourself |
+| Delegation (`UITableViewDataSource`) | Callbacks, or one parent listener (event delegation) | Same idea: object A asks object B |
+| `UITableView` / `UICollectionView` | Render a list into the DOM | You still produce the rows |
+| `UINavigationController` | Links, or History API (`pushState`) | Stack vs URL |
+| `URLSession` | `fetch` | HTTP client |
+| `UserDefaults` | `localStorage` | Key-value only |
+| `NotificationCenter` | `CustomEvent` / a tiny pub-sub | Optional; easy to overuse |
+| SPM / CocoaPods | npm / pnpm | Dependencies |
+| `.xcodeproj` | `package.json` + Vite later | Manifest + bundler |
+| Simulator | Browser + DevTools | Debugger + inspector |
+| Instruments | DevTools Performance | |
 
----
-
-## The Core Paradigm You Already Know
-
-SwiftUI taught you this already, so don't relearn it — just relabel it:
-
-```
-State changes → View re-computes/re-renders → UI updates
-```
-
-React is the exact same idea:
+Vanilla JS will feel like UIKit: change the model, then poke the view.
 
 ```swift
-// SwiftUI
-struct CounterView: View {
-    @State private var count = 0
-    var body: some View {
-        VStack {
-            Text("Count: \(count)")
-            Button("Increment") { count += 1 }
-        }
-    }
-}
+// UIKit — you update the label
+count += 1
+countLabel.text = "Count: \(count)"
 ```
+
+```js
+// Vanilla JS — same move
+count += 1;
+countEl.textContent = `Count: ${count}`;
+```
+
+React (Phase 8) is the *other* model — describe the UI from state, let the library patch the DOM. That is closer to SwiftUI. You have not needed that skill in UIKit, and you will not start there.
 
 ```tsx
-// React (TypeScript)
-function CounterView() {
-  const [count, setCount] = useState(0);
-  return (
-    <div>
-      <p>Count: {count}</p>
-      <button onClick={() => setCount(count + 1)}>Increment</button>
-    </div>
-  );
-}
+// React — later. You do not write the DOM update.
+const [count, setCount] = useState(0);
+return <p>Count: {count}</p>;
 ```
 
-Map it directly:
-- `@State` ↔ `useState`
-- `body` (computed property) ↔ the function's return statement (JSX)
-- View struct ↔ Component function
-- `@Binding` ↔ passing `value` + `onChange` as props (no built-in two-way binding sugar in React)
-- `@EnvironmentObject` / `@ObservedObject` ↔ Context API, or a state library (Zustand/Redux)
-- View modifiers chained (`.padding().background()`) ↔ CSS classes / inline styles / Tailwind utility classes
+Until then: change data, then change DOM nodes. You already know that loop.
 
 ---
 
-## Where the Real Differences Are (pay attention here)
+## Real differences (pay attention)
 
 ### 1. No compiler safety net (until TypeScript)
-Swift catches type errors at compile time. Raw JS catches nothing until runtime — a typo in a property name just silently returns `undefined` instead of refusing to build. This is *exactly* why you're learning TypeScript early: it restores the safety net you're used to.
+Swift catches type errors at compile time. Raw JS returns `undefined` for a typo. TypeScript (Phase 3) restores a net — but it is erased at runtime. `string | undefined` does not check the network response for you.
 
 ### 2. `this` is not `self`
-In Swift, `self` is explicit and predictable. In JS, `this` depends on *how a function is called*, not where it's defined — a genuine footgun. Arrow functions (`() => {}`) fix this by inheriting `this` from their surrounding scope, which is why modern JS/React code uses arrow functions almost everywhere. You'll hit this directly in Phase 2 — don't skim it.
+`this` depends on *how* a function is called. Arrow functions inherit `this` from surrounding scope. Hit this in Phase 2. Do not skim it.
 
-### 3. Single-threaded + event loop, not GCD/actors
-No dispatch queues, no `DispatchQueue.main.async`, no actors. JS runs on one thread with an event loop; async operations (network calls, timers) get queued and processed via the **microtask queue** (Promises) and **callback queue** (setTimeout etc.). `async`/`await` in JS looks like Swift's, but there's no structured concurrency, no `Task {}`, no actor isolation underneath it — it's simpler but less safe by design.
+### 3. Single-threaded + event loop
+No GCD, no actors. One thread. Network and timers go through the event loop (`Promises` vs `setTimeout`). `async`/`await` looks like Swift’s but has no structured concurrency underneath.
 
-### 4. The DOM and CSS are genuinely new territory
-There's no UIKit/SwiftUI equivalent to "the DOM" as a concept — it's a live tree of nodes the browser renders, and React's whole job is managing it efficiently for you (via the virtual DOM diffing). CSS layout (flexbox/grid) is conceptually similar to Auto Layout/stack views in *purpose* (arranging views) but has completely different rules and no transferable syntax. Budget real time here — this is your true "new fundamentals," not JS itself.
+### 4. The DOM and CSS are the new substrate
+The DOM is your `UIView` tree. CSS layout (flexbox/grid) has the same *job* as Auto Layout / stack views and none of the syntax. Budget real time here — this is the new fundamental, not React.
 
-### 5. Data fetching has no built-in "repository pattern"
-You're used to structuring apps with clear data layers (maybe Core Data/SQLite + a repository/service layer). In basic React, `fetch`/`useEffect` is the "raw" way; in production you'll use TanStack Query, which gives you caching, retries, and loading states — closer to what you'd hand-roll yourself with SQLite + a sync layer today.
+### 5. Data fetching has no built-in repository
+`fetch` is raw `URLSession`. Loading, errors, retries, and cache are yours until something like TanStack Query (Phase 9).
 
 ---
 
-## One-Sentence Summary to Keep in Mind
+## One-sentence summary
 
-**You already know the "declarative UI + state-driven re-render" game from SwiftUI — your actual learning curve is JS-the-language (especially `this` and async), the DOM/CSS as a new UI substrate, and the web's dependency/tooling ecosystem. Everything else is vocabulary, not new concepts.**
+**UIKit already taught you imperative UI. Vanilla JS is that same habit in the browser. Learn HTTP, HTML, CSS, the DOM, and a Spring Boot JSON API first. HTMX and React are two later answers to “who updates the page.”**
